@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VocabMaster - 100 Days Plan</title>
+    <meta name="description" content="Improve English vocabulary through a structured 100-day plan.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><i class="fa-solid fa-book-open"></i> VocabMaster</div>
+        <div class="header-controls">
+            <button id="themeToggle" class="icon-btn" aria-label="Toggle Dark Mode" title="Toggle Dark Mode">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main id="app">
+        <!-- Dashboard View -->
+        <section id="dashboardView" class="view active-view">
+            <div class="hero">
+                <h1>Master English in 100 Days</h1>
+                <p>Learn 5 new words daily, revise, and quiz yourself to unlock the next level.</p>
+                <div class="progress-container">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar" id="overallProgressBar" style="width: 0%;"></div>
+                    </div>
+                    <span id="progressText">0 / 100 Days Completed</span>
+                </div>
+            </div>
+            
+            <div class="roadmap-grid" id="roadmapGrid">
+                <!-- Dynamically populated day cards -->
+            </div>
+        </section>
+
+        <!-- Revision View -->
+        <section id="revisionView" class="view hidden-view">
+            <div class="view-header">
+                <h2>Revision: Day <span id="revisionDayNum"></span> Words</h2>
+                <button class="btn-cancel" onclick="app.showDashboard()">Exit</button>
+            </div>
+            <div class="revision-content">
+                <p class="section-desc">Before learning new words, quickly review what you learned yesterday.</p>
+                <div class="revision-grid" id="revisionGrid">
+                    <!-- Words for revision shown here -->
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn-primary" id="btnStartToday" style="font-size: 1.25rem;">Start Today's Lesson <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </section>
+
+        <!-- Learning View -->
+        <section id="learningView" class="view hidden-view">
+            <div class="view-header">
+                <h2>Day <span id="learningDayNum"></span>: Vocabulary</h2>
+                <span class="step-indicator" id="wordProgressIndicator">1 / 5</span>
+                <button class="btn-cancel" onclick="app.showDashboard()">Quit</button>
+            </div>
+            <div class="word-card-container">
+                <div class="word-card" id="wordCard">
+                    <!-- Dynamic Word Details -->
+                </div>
+            </div>
+            <div class="navigation-buttons">
+                <button class="btn-secondary" id="btnPrevWord" disabled><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                <button class="btn-primary" id="btnNextWord">Next <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </section>
+
+        <!-- Quiz View -->
+        <section id="quizView" class="view hidden-view">
+            <div class="view-header">
+                <h2>Day <span id="quizDayNum"></span>: Quiz</h2>
+                <span class="step-indicator" id="quizProgressIndicator">1 / 7</span>
+                <button class="btn-cancel" onclick="app.showDashboard()">Quit</button>
+            </div>
+            <div class="quiz-container">
+                <div class="quiz-card" id="quizCard">
+                    <!-- Dynamic Quiz Detail -->
+                </div>
+            </div>
+            <div class="navigation-buttons" id="quizNavButtons">
+                <button class="btn-primary" id="btnSubmitQuizAnswer" style="margin-left:auto;">Submit Answer</button>
+                <button class="btn-primary" id="btnNextQuizQuestion" style="display:none; margin-left:auto;">Next Question <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </section>
+
+        <!-- Result View -->
+        <section id="resultView" class="view hidden-view">
+            <div class="result-card" id="resultCard">
+                <h1 id="resultTitle">Result</h1>
+                <div class="score-circle" id="scoreCircle">
+                    <span id="scoreText">0%</span>
+                </div>
+                <p id="resultMessage" style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;"></p>
+                <div class="review-answers" id="reviewAnswers">
+                    <!-- Mistake explanations etc -->
+                </div>
+                <button class="btn-primary" id="btnResultAction">Continue</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
