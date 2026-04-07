@@ -86,9 +86,13 @@ const quizData = {
 
 class VocabApp {
     constructor() {
+        auth.requireAuth();
+        this.user = auth.getCurrentUser();
         this.totalDays = 100;
-        this.unlockedDay = parseInt(localStorage.getItem('vocabUnlockedDay')) || 1;
-        this.scores = JSON.parse(localStorage.getItem('vocabScores')) || {};
+        
+        const progress = this.user.progress || {};
+        this.unlockedDay = progress.unlockedDay || 1;
+        this.scores = progress.scores || {};
         this.theme = localStorage.getItem('vocabTheme') || 'light';
         
         this.currentDay = 1;
@@ -112,7 +116,15 @@ class VocabApp {
         document.getElementById('btnNextQuizQuestion').addEventListener('click', () => this.handleNextQuizQuestion());
         document.getElementById('btnResultAction').addEventListener('click', () => this.handleResultAction());
 
-        this.showDashboard();
+        const params = new URLSearchParams(window.location.search);
+        let day = parseInt(params.get('day'));
+        
+        if (!day || day > this.unlockedDay || day > this.totalDays) {
+            this.goToDashboard();
+            return;
+        }
+
+        this.handleDaySelect(day);
     }
 
     applyTheme() {
@@ -141,53 +153,8 @@ class VocabApp {
         window.scrollTo(0, 0);
     }
 
-    showDashboard() {
-        this.updateProgressUI();
-        this.renderRoadmap();
-        this.switchView('dashboardView');
-    }
-
-    updateProgressUI() {
-        const completedDays = this.unlockedDay - 1;
-        const width = (completedDays / this.totalDays) * 100;
-        document.getElementById('overallProgressBar').style.width = width + '%';
-        document.getElementById('progressText').innerText = `${completedDays} / ${this.totalDays} Days Completed`;
-    }
-
-    renderRoadmap() {
-        const grid = document.getElementById('roadmapGrid');
-        grid.innerHTML = '';
-
-        for (let i = 1; i <= this.totalDays; i++) {
-            const card = document.createElement('div');
-            card.classList.add('day-card');
-            
-            const dayNum = document.createElement('div');
-            dayNum.classList.add('day-num');
-            dayNum.innerText = `Day ${i}`;
-            card.appendChild(dayNum);
-            
-            const dayStatus = document.createElement('div');
-            dayStatus.classList.add('day-status');
-            
-            if (i < this.unlockedDay) {
-                card.classList.add('completed');
-                dayStatus.innerHTML = '<i class="fa-solid fa-check"></i> Passed';
-            } else if (i === this.unlockedDay) {
-                card.classList.add('current');
-                card.classList.add('unlocked');
-                dayStatus.innerHTML = '<i class="fa-solid fa-lock-open"></i> Start';
-            } else {
-                card.classList.add('locked');
-                dayStatus.innerHTML = '<i class="fa-solid fa-lock"></i> Locked';
-            }
-            card.appendChild(dayStatus);
-
-            if (i <= this.unlockedDay) {
-                card.addEventListener('click', () => this.handleDaySelect(i));
-            }
-            grid.appendChild(card);
-        }
+    goToDashboard() {
+        window.location.href = 'dashboard.html';
     }
 
     handleDaySelect(day) {
@@ -471,9 +438,15 @@ class VocabApp {
             // Unlock logic
             if (this.currentDay === this.unlockedDay && this.unlockedDay < this.totalDays) {
                 this.unlockedDay++;
-                localStorage.setItem('vocabUnlockedDay', this.unlockedDay);
                 msg += `<br><span style="color:var(--success-color)">Day ${this.unlockedDay} is now unlocked!</span>`;
             }
+            
+            // Save score
+            this.scores[`day${this.currentDay}`] = percentage;
+            auth.updateUserProgress({
+                unlockedDay: this.unlockedDay,
+                scores: this.scores
+            });
         } else {
             document.getElementById('resultTitle').innerText = "Keep Practicing";
             msg = `You need 80% to unlock the next day. Review and try again!`;
@@ -503,7 +476,7 @@ class VocabApp {
     handleResultAction() {
         const percentage = Math.round((this.currentScore / this.currentQuizQuestions.length) * 100);
         if (percentage >= 80) {
-            this.showDashboard();
+            this.goToDashboard();
         } else {
             // retry
             this.startQuiz();

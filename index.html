@@ -21,29 +21,12 @@
     </header>
 
     <main id="app">
-        <!-- Dashboard View -->
-        <section id="dashboardView" class="view active-view">
-            <div class="hero">
-                <h1>Master English in 100 Days</h1>
-                <p>Learn 5 new words daily, revise, and quiz yourself to unlock the next level.</p>
-                <div class="progress-container">
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar" id="overallProgressBar" style="width: 0%;"></div>
-                    </div>
-                    <span id="progressText">0 / 100 Days Completed</span>
-                </div>
-            </div>
-            
-            <div class="roadmap-grid" id="roadmapGrid">
-                <!-- Dynamically populated day cards -->
-            </div>
-        </section>
 
         <!-- Revision View -->
         <section id="revisionView" class="view hidden-view">
             <div class="view-header">
                 <h2>Revision: Day <span id="revisionDayNum"></span> Words</h2>
-                <button class="btn-cancel" onclick="app.showDashboard()">Exit</button>
+                <button class="btn-cancel" onclick="app.goToDashboard()">Exit</button>
             </div>
             <div class="revision-content">
                 <p class="section-desc">Before learning new words, quickly review what you learned yesterday.</p>
@@ -61,7 +44,7 @@
             <div class="view-header">
                 <h2>Day <span id="learningDayNum"></span>: Vocabulary</h2>
                 <span class="step-indicator" id="wordProgressIndicator">1 / 5</span>
-                <button class="btn-cancel" onclick="app.showDashboard()">Quit</button>
+                <button class="btn-cancel" onclick="app.goToDashboard()">Quit</button>
             </div>
             <div class="word-card-container">
                 <div class="word-card" id="wordCard">
@@ -79,7 +62,7 @@
             <div class="view-header">
                 <h2>Day <span id="quizDayNum"></span>: Quiz</h2>
                 <span class="step-indicator" id="quizProgressIndicator">1 / 7</span>
-                <button class="btn-cancel" onclick="app.showDashboard()">Quit</button>
+                <button class="btn-cancel" onclick="app.goToDashboard()">Quit</button>
             </div>
             <div class="quiz-container">
                 <div class="quiz-card" id="quizCard">
@@ -108,6 +91,7 @@
         </section>
     </main>
 
+    <script src="auth.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

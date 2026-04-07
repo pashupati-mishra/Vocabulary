@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VocabMaster - Dashboard</title>
+    <meta name="description" content="Your 100-day vocabulary progress.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><i class="fa-solid fa-book-open"></i> VocabMaster</div>
+        <div class="user-profile-controls">
+            <button id="themeToggle" class="icon-btn" aria-label="Toggle Dark Mode" title="Toggle Dark Mode">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <button id="btnLogout" class="btn-primary btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </div>
+    </header>
+
+    <main id="app">
+        <!-- Advanced Dashboard View -->
+        <section id="dashboardView" class="view active-view">
+            
+            <div class="dashboard-header">
+                <div class="dashboard-greeting">
+                    <h1 id="userGreeting">Welcome, User</h1>
+                    <p>Continue your journey. Master 5 new words today!</p>
+                </div>
+            </div>
+
+            <!-- Performance Overview Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                    <div class="stat-info">
+                        <h3>Days Completed</h3>
+                        <div class="stat-value" id="statDaysCompleted">0 / 100</div>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+                    <div class="stat-info">
+                        <h3>Average Score</h3>
+                        <div class="stat-value" id="statAvgScore">0%</div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+                    <div class="stat-info">
+                        <h3>Best Score</h3>
+                        <div class="stat-value" id="statBestScore">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero" style="padding: 1.5rem; margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h2 style="font-size: 1.25rem;">Overall Progress</h2>
+                    <span id="progressText" style="font-weight: 600; color: var(--primary-color);">0%</span>
+                </div>
+                <div class="progress-bar-bg" style="margin-bottom: 0;">
+                    <div class="progress-bar" id="overallProgressBar" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="activity-section">
+                <h3><i class="fa-solid fa-clock-rotate-left"></i> Recent Activity</h3>
+                <ul class="activity-list" id="recentActivityList">
+                    <li class="activity-item" style="color: var(--text-light);">No activity yet. Complete your first day!</li>
+                </ul>
+            </div>
+            
+            <h3 style="margin-bottom: 1rem; color: var(--text-color);">Learning Roadmap</h3>
+            <div class="roadmap-grid" id="roadmapGrid">
+                <!-- Dynamically populated day cards -->
+            </div>
+        </section>
+    </main>
+
+    <script src="auth.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
