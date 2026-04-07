@@ -362,12 +362,14 @@ class VocabApp {
                 selected.classList.add('correct-ans');
                 feedback.innerHTML = `<strong><i class="fa-solid fa-circle-check"></i> Correct!</strong>`;
                 feedback.className = 'feedback-container show correct';
+                if (typeof gamification !== 'undefined') gamification.playSuccess();
             } else {
                 selected.classList.add('wrong-ans');
                 const correctBtn = document.querySelectorAll('.option-btn')[q.answer];
-                correctBtn.classList.add('correct-ans');
+                if (correctBtn) correctBtn.classList.add('correct-ans');
                 feedback.innerHTML = `<strong><i class="fa-solid fa-circle-xmark"></i> Incorrect.</strong><p>The correct answer is: ${q.options[q.answer]}</p>`;
                 feedback.className = 'feedback-container show incorrect';
+                if (typeof gamification !== 'undefined') gamification.playError();
             }
 
         } else if (q.type === 'sentence') {
@@ -383,9 +385,11 @@ class VocabApp {
                 isCorrect = true;
                 feedback.innerHTML = `<strong><i class="fa-solid fa-circle-check"></i> Good job!</strong><p>You correctly used the word "${q.keyword}".</p><p>Sample: ${q.example}</p>`;
                 feedback.className = 'feedback-container show correct';
+                if (typeof gamification !== 'undefined') gamification.playSuccess();
             } else {
                 feedback.innerHTML = `<strong><i class="fa-solid fa-circle-xmark"></i> Keyword Missing.</strong><p>You didn't use the word "${q.keyword}" properly.</p><p>Sample: ${q.example}</p>`;
                 feedback.className = 'feedback-container show incorrect';
+                if (typeof gamification !== 'undefined') gamification.playError();
             }
         }
 
@@ -443,9 +447,37 @@ class VocabApp {
             
             // Save score
             this.scores[`day${this.currentDay}`] = percentage;
+            
+            // Gamification
+            let streakRes = {addedXP: 0, messages: []};
+            let xpRes = {leveledUp: false};
+            let newBadges = [];
+
+            if (typeof gamification !== 'undefined') {
+                streakRes = gamification.updateStreak(this.user.progress);
+                xpRes = gamification.addXP(this.user.progress, 50 + streakRes.addedXP);
+                newBadges = gamification.evaluateBadges(this.user.progress, percentage);
+                
+                if (xpRes.leveledUp) {
+                    gamification.playLevelUp();
+                    msg += `<br><strong style="color:var(--primary-color);">Wow! You reached Level ${xpRes.level}!</strong>`;
+                } else {
+                    gamification.shootConfetti();
+                }
+
+                msg += `<br>+${50 + streakRes.addedXP} XP earned!`;
+                if (streakRes.messages.length > 0) msg += ` <small>${streakRes.messages.join(', ')}</small>`;
+                if (newBadges.length > 0) msg += `<br><span style="color:var(--warning-color)"><i class="fa-solid fa-medal"></i> New Badges: ${newBadges.join(', ')}</span>`;
+            }
+
             auth.updateUserProgress({
                 unlockedDay: this.unlockedDay,
-                scores: this.scores
+                scores: this.scores,
+                xp: this.user.progress.xp,
+                level: this.user.progress.level,
+                streak: this.user.progress.streak,
+                lastActivityDate: this.user.progress.lastActivityDate,
+                badges: this.user.progress.badges
             });
         } else {
             document.getElementById('resultTitle').innerText = "Keep Practicing";

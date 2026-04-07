@@ -36,7 +36,15 @@ class Auth {
             progress: {
                 currentDay: 1,
                 unlockedDay: 1, // Using integer for easier logic
-                scores: {}
+                scores: {},
+                weeklyTests: {},
+                midTestScore: null,
+                finalExamScore: null,
+                xp: 0,
+                level: 1,
+                streak: 0,
+                badges: [],
+                lastActivityDate: null
             }
         };
 
@@ -67,7 +75,21 @@ class Auth {
     getCurrentUser() {
         const userId = localStorage.getItem(this.sessionKey);
         if (!userId) return null;
-        return this.users.find(u => u.id === userId) || null;
+        const user = this.users.find(u => u.id === userId) || null;
+        if (user && user.progress) {
+            // Backfill legacy users
+            if (!user.progress.weeklyTests) user.progress.weeklyTests = {};
+            if (user.progress.midTestScore === undefined) user.progress.midTestScore = null;
+            if (user.progress.finalExamScore === undefined) user.progress.finalExamScore = null;
+            
+            // Gamification backfill
+            if (user.progress.xp === undefined) user.progress.xp = 0;
+            if (user.progress.level === undefined) user.progress.level = 1;
+            if (user.progress.streak === undefined) user.progress.streak = 0;
+            if (user.progress.badges === undefined) user.progress.badges = [];
+            if (user.progress.lastActivityDate === undefined) user.progress.lastActivityDate = null;
+        }
+        return user;
     }
 
     requireAuth() {
