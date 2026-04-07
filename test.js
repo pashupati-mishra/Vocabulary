@@ -4,7 +4,7 @@ auth.requireAuth();
 class TestApp {
     constructor() {
         this.user = auth.getCurrentUser();
-        this.theme = localStorage.getItem('vocabTheme') || 'light';
+        this.theme = localStorage.getItem('vocabTheme') || 'dark';
         
         this.testType = null;
         this.weekNum = null;

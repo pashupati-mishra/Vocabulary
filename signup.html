@@ -51,7 +51,7 @@
     <script src="auth.js"></script>
     <script>
         // Init theme
-        const savedTheme = localStorage.getItem('vocabTheme') || 'light';
+        const savedTheme = localStorage.getItem('vocabTheme') || 'dark';
         if (savedTheme === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             document.getElementById('themeToggle').innerHTML = '<i class="fa-solid fa-sun"></i>';

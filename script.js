@@ -93,7 +93,7 @@ class VocabApp {
         const progress = this.user.progress || {};
         this.unlockedDay = progress.unlockedDay || 1;
         this.scores = progress.scores || {};
-        this.theme = localStorage.getItem('vocabTheme') || 'light';
+        this.theme = localStorage.getItem('vocabTheme') || 'dark';
         
         this.currentDay = 1;
         this.currentWordIndex = 0;

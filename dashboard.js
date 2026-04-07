@@ -5,8 +5,8 @@ class DashboardApp {
     constructor() {
         this.totalDays = 100;
         this.user = auth.getCurrentUser();
-        this.theme = localStorage.getItem('vocabTheme') || 'light';
-        
+        this.theme = localStorage.getItem('vocabTheme') || 'dark';
+
         this.init();
     }
 
@@ -47,15 +47,15 @@ class DashboardApp {
         const currentXp = progress.xp;
         const xpForNextLevel = progress.level * 100;
         document.getElementById('xpText').innerText = `${currentXp} / ${xpForNextLevel} XP`;
-        
+
         const xpPct = Math.min((currentXp / xpForNextLevel) * 100, 100);
         document.getElementById('xpProgressBar').style.width = xpPct + '%';
-        
+
         document.getElementById('streakCount').innerText = `${progress.streak} Day Streak`;
-        
+
         const badges = progress.badges;
         document.getElementById('badgeCount').innerText = `${badges.length} Badges Earned`;
-        
+
         const completedDays = unlockedDay - 1;
         document.getElementById('statDaysCompleted').innerText = `${completedDays} Days Done`;
 
@@ -110,7 +110,7 @@ class DashboardApp {
     isDayBlockedByMilestone(day) {
         const progress = this.user.progress;
         if (day > 50 && progress.midTestScore === null) return true;
-        
+
         const requiredWeek = Math.floor((day - 1) / 7);
         if (requiredWeek > 0 && !progress.weeklyTests[`week${requiredWeek}`]) {
             return true;
@@ -122,20 +122,20 @@ class DashboardApp {
         const grid = document.getElementById('milestonesGrid');
         grid.innerHTML = '';
         const progress = this.user.progress;
-        
+
         // Identify which milestones should be shown
         // We will show all weeks up to the currently unlocked required week so user can see them
-        const maxWeekToDisplay = Math.max(1, Math.ceil((unlockedDay - 1) / 7)); 
-        
+        const maxWeekToDisplay = Math.max(1, Math.ceil((unlockedDay - 1) / 7));
+
         for (let w = 1; w <= maxWeekToDisplay; w++) {
             if (w * 7 > 100) break; // Maximum 14 weeks limit (98 days)
-            
-            const isUnlocked = unlockedDay > (w * 7) || (unlockedDay === (w * 7) && scores[`day${w*7}`]); 
+
+            const isUnlocked = unlockedDay > (w * 7) || (unlockedDay === (w * 7) && scores[`day${w * 7}`]);
             // Accessible if Day 7 is completed (which means unlockedDay > 7 or unlockedDay == 7 and scores[day7] exists) 
             const hasPassed = !!progress.weeklyTests[`week${w}`];
             const score = progress.weeklyTests[`week${w}`];
 
-            this.createMilestoneCard(grid, `Weekly Test ${w}`, `Days ${((w-1)*7)+1} - ${w*7}`, isUnlocked, hasPassed, score, `weekly&week=${w}`);
+            this.createMilestoneCard(grid, `Weekly Test ${w}`, `Days ${((w - 1) * 7) + 1} - ${w * 7}`, isUnlocked, hasPassed, score, `weekly&week=${w}`);
         }
 
         // Mid-Course Test (Day 50)
@@ -194,15 +194,15 @@ class DashboardApp {
         for (let i = 1; i <= this.totalDays; i++) {
             const card = document.createElement('div');
             card.classList.add('day-card');
-            
+
             const dayNum = document.createElement('div');
             dayNum.classList.add('day-num');
             dayNum.innerText = `Day ${i}`;
             card.appendChild(dayNum);
-            
+
             const dayStatus = document.createElement('div');
             dayStatus.classList.add('day-status');
-            
+
             if (i < unlockedDay) {
                 card.classList.add('completed');
                 dayStatus.innerHTML = '<i class="fa-solid fa-check"></i> Passed';
